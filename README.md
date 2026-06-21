@@ -153,7 +153,7 @@ Base URL: `http://localhost:3001`
 
 **Muhammad Rakha Alfaruq** — *React Developer & Data Analyst*
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](www.linkedin.com/in/muhammad-rakha-alfaruq-9518b6337) 
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/muhammad-rakha-alfaruq-9518b6337) 
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/rakhafaruq)
 
 ---
