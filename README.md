@@ -158,7 +158,6 @@ Base URL: `http://localhost:3001`
 
 ---
 
-## 📝 Catatan
+## 📝 Dataset
 
-- Proyek ini berjalan secara **lokal** (tidak di-deploy).
-- Dataset: [Mall Customer Segmentation Data (Kaggle)](https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python).
+- [Mall Customer Segmentation Data (Kaggle)](https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python).
