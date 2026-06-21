@@ -1,0 +1,27 @@
+# === Python ===
+env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# === Node.js ===
+node_modules/
+dist/
+build/
+.vite/
+
+# === Environment & Secrets ===
+.env
+.env.local
+
+# === Database (regenerable via setup.js) ===
+*.db
+
+# === OS & Editor ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
