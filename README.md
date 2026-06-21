@@ -2,7 +2,7 @@
 
 Aplikasi cerdas untuk mengelompokkan pelanggan mall ke dalam segmen perilaku menggunakan *machine learning* (K-Means Clustering), dilengkapi *executive dashboard* interaktif untuk memantau distribusi pelanggan dan mendukung keputusan *targeted marketing*.
 
-> **Status:** Selesai (Lokal) · **Metodologi:** CRISP-DM (Data Science) & Agile (Web Development)
+
 > 
 
 ---
