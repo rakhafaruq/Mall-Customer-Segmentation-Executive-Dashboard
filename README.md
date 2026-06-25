@@ -2,7 +2,7 @@
 
 Aplikasi cerdas untuk mengelompokkan pelanggan mall ke dalam segmen perilaku menggunakan *machine learning* (K-Means Clustering), dilengkapi *executive dashboard* interaktif untuk memantau distribusi pelanggan dan mendukung keputusan *targeted marketing*.
 
-> **Status:** Selesai (Lokal) · **Metodologi:** CRISP-DM (Data Science) & Agile (Web Development)
+
 > 
 
 ---
@@ -151,13 +151,13 @@ Base URL: `http://localhost:3001`
 
 ## 👤 Author
 
-**Rakha Alfaruq** — *Lead Developer & Data Analyst*
+**Muhammad Rakha Alfaruq** — *React Developer & Data Analyst*
 
-[Tambahkan: email / LinkedIn / GitHub]
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/muhammad-rakha-alfaruq-9518b6337) 
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/rakhafaruq)
 
 ---
 
-## 📝 Catatan
+## 📝 Dataset
 
-- Proyek ini berjalan secara **lokal** (tidak di-deploy).
-- Dataset: [Mall Customer Segmentation Data (Kaggle)](https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python).
+- [Mall Customer Segmentation Data (Kaggle)](https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python).
