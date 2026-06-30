@@ -1,18 +1,8 @@
-/**
- * CustomerTable.jsx
- * Tabel data pelanggan dengan:
- * - Filter dropdown persona (di-derive dari data aktual via stats)
- * - Pagination 20 baris per halaman
- * - Badge berwarna per persona
- * - Spending score bar visual
- */
-
 import { useState, useMemo } from 'react'
 
 const PAGE_SIZE = 20
 const ALL_PERSONAS = 'Semua Persona'
 
-/* ── Badge style map ─────────────────────── */
 const BADGE_MAP = {
   'Target Utama (VIP)': 'badge badge-vip',
   'Pelanggan Standar':  'badge badge-standar',
@@ -25,7 +15,6 @@ function getBadgeClass(persona) {
   return BADGE_MAP[persona?.trim()] ?? 'badge badge-standar'
 }
 
-/* ── Spending score bar color ────────────── */
 function scoreColor(score) {
   if (score >= 75) return '#10b981'
   if (score >= 50) return '#f59e0b'
@@ -33,7 +22,6 @@ function scoreColor(score) {
   return '#f43f5e'
 }
 
-/* ── Pagination buttons ─────────────────── */
 function PageButtons({ page, totalPages, onPage }) {
   const MAX = 5
   let start = Math.max(1, page - Math.floor(MAX / 2))
@@ -43,32 +31,38 @@ function PageButtons({ page, totalPages, onPage }) {
   const pages = []
   for (let i = start; i <= end; i++) pages.push(i)
 
-  return (
-    <div className="pagination-buttons">
-      <button className="page-btn" onClick={() => onPage(1)} disabled={page === 1} title="Pertama">«</button>
-      <button className="page-btn" onClick={() => onPage(page - 1)} disabled={page === 1} title="Sebelumnya">‹</button>
+  const btnBase =
+    'w-[31px] h-[31px] rounded-md border text-[0.8rem] font-medium cursor-pointer inline-flex items-center justify-center transition-all font-[inherit] leading-none disabled:opacity-35 disabled:cursor-not-allowed'
+  const btnDefault =
+    'border-slate-200 bg-white text-slate-500 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-500'
+  const btnActive =
+    'bg-violet-500 border-violet-500 text-white shadow-[0_2px_8px_rgba(139,92,246,0.35)]'
 
-      {start > 1 && <span style={{ padding: '0 4px', color: '#94a3b8', alignSelf: 'center' }}>…</span>}
+  return (
+    <div className="flex gap-1.5 flex-wrap">
+      <button className={`${btnBase} ${btnDefault}`} onClick={() => onPage(1)}      disabled={page === 1}          title="Pertama">«</button>
+      <button className={`${btnBase} ${btnDefault}`} onClick={() => onPage(page-1)} disabled={page === 1}          title="Sebelumnya">‹</button>
+
+      {start > 1 && <span className="px-1 text-slate-400 self-center">…</span>}
 
       {pages.map(p => (
         <button
           key={p}
-          className={`page-btn${p === page ? ' active' : ''}`}
+          className={`${btnBase} ${p === page ? btnActive : btnDefault}`}
           onClick={() => onPage(p)}
         >
           {p}
         </button>
       ))}
 
-      {end < totalPages && <span style={{ padding: '0 4px', color: '#94a3b8', alignSelf: 'center' }}>…</span>}
+      {end < totalPages && <span className="px-1 text-slate-400 self-center">…</span>}
 
-      <button className="page-btn" onClick={() => onPage(page + 1)} disabled={page === totalPages} title="Berikutnya">›</button>
-      <button className="page-btn" onClick={() => onPage(totalPages)} disabled={page === totalPages} title="Terakhir">»</button>
+      <button className={`${btnBase} ${btnDefault}`} onClick={() => onPage(page+1)}      disabled={page === totalPages} title="Berikutnya">›</button>
+      <button className={`${btnBase} ${btnDefault}`} onClick={() => onPage(totalPages)}  disabled={page === totalPages} title="Terakhir">»</button>
     </div>
   )
 }
 
-/* ── Main Component ─────────────────────── */
 /**
  * @param {{ customers: object[], stats: object[] }} props
  * `stats` digunakan untuk membangun daftar filter persona secara dinamis
@@ -78,7 +72,6 @@ export default function CustomerTable({ customers, stats }) {
   const [selectedPersona, setSelectedPersona] = useState(ALL_PERSONAS)
   const [page, setPage]                       = useState(1)
 
-  // Buat daftar pilihan persona dari stats (server-side) agar selalu sinkron dengan DB
   const personaOptions = useMemo(() => {
     const fromStats = stats.map(s => s.persona.trim()).filter(Boolean)
     return [ALL_PERSONAS, ...fromStats]
@@ -110,12 +103,13 @@ export default function CustomerTable({ customers, stats }) {
   const endRow   = Math.min(page * PAGE_SIZE, filtered.length)
 
   return (
-    <div className="glass-card table-card">
-      {/* ── Header ─────────────────────────── */}
-      <div className="table-header">
+    <div className="glass-card p-6">
+      <div className="flex items-start justify-between mb-5 gap-4">
         <div>
-          <div className="chart-title">📋 Data Pelanggan</div>
-          <div className="chart-subtitle">
+          <div className="text-[0.9375rem] font-bold text-slate-900 mb-0.5 tracking-tight">
+            📋 Data Pelanggan
+          </div>
+          <div className="text-xs text-slate-400">
             {filtered.length > 0
               ? `Menampilkan ${startRow}–${endRow} dari ${filtered.length} pelanggan`
               : 'Tidak ada data untuk filter ini'}
@@ -134,59 +128,58 @@ export default function CustomerTable({ customers, stats }) {
         </select>
       </div>
 
-      {/* ── Table ──────────────────────────── */}
-      <div className="table-wrapper">
-        <table>
+      <div className="overflow-x-auto rounded-xl border border-slate-200">
+        <table className="w-full border-collapse">
           <thead>
-            <tr>
-              <th style={{ width: 40 }}>#</th>
-              <th>ID</th>
-              <th>Usia</th>
-              <th>Gender</th>
-              <th>Income</th>
-              <th>Spending Score</th>
-              <th>Persona</th>
+            <tr className="bg-gradient-to-r from-slate-50 to-blue-50/50">
+              <th className="px-4 py-3 text-left text-[0.6875rem] font-bold text-slate-500 uppercase tracking-[0.07em] border-b border-slate-200 whitespace-nowrap w-10">#</th>
+              <th className="px-4 py-3 text-left text-[0.6875rem] font-bold text-slate-500 uppercase tracking-[0.07em] border-b border-slate-200 whitespace-nowrap">ID</th>
+              <th className="px-4 py-3 text-left text-[0.6875rem] font-bold text-slate-500 uppercase tracking-[0.07em] border-b border-slate-200 whitespace-nowrap">Usia</th>
+              <th className="px-4 py-3 text-left text-[0.6875rem] font-bold text-slate-500 uppercase tracking-[0.07em] border-b border-slate-200 whitespace-nowrap">Gender</th>
+              <th className="px-4 py-3 text-left text-[0.6875rem] font-bold text-slate-500 uppercase tracking-[0.07em] border-b border-slate-200 whitespace-nowrap">Income</th>
+              <th className="px-4 py-3 text-left text-[0.6875rem] font-bold text-slate-500 uppercase tracking-[0.07em] border-b border-slate-200 whitespace-nowrap">Spending Score</th>
+              <th className="px-4 py-3 text-left text-[0.6875rem] font-bold text-slate-500 uppercase tracking-[0.07em] border-b border-slate-200 whitespace-nowrap">Persona</th>
             </tr>
           </thead>
           <tbody>
             {paginated.length === 0 ? (
               <tr>
-                <td colSpan={7} style={{
-                  textAlign: 'center', padding: '2.5rem',
-                  color: '#94a3b8', fontSize: '0.875rem',
-                }}>
+                <td colSpan={7} className="text-center py-10 text-slate-400 text-sm">
                   Tidak ada data pelanggan untuk persona ini.
                 </td>
               </tr>
             ) : paginated.map((c, i) => (
-              <tr key={c.id}>
-                <td style={{ color: '#cbd5e1', fontSize: '0.8rem', fontWeight: 500 }}>
+              <tr key={c.id} className="border-b border-slate-50 last:border-0 hover:bg-violet-500/[.03] transition-colors">
+                <td className="px-4 py-[0.8125rem] text-[0.8rem] font-medium text-slate-300 align-middle">
                   {startRow + i}
                 </td>
-                <td style={{ fontWeight: 700, color: '#6d28d9', fontSize: '0.8125rem' }}>
+                <td className="px-4 py-[0.8125rem] text-[0.8125rem] font-bold text-violet-700 align-middle">
                   #{c.id}
                 </td>
-                <td>{c.age} th</td>
-                <td>
-                  <span className={`gender-chip ${c.gender === 'Male' ? 'male' : 'female'}`}>
+                <td className="px-4 py-[0.8125rem] text-sm text-slate-900 align-middle">
+                  {c.age} th
+                </td>
+                <td className="px-4 py-[0.8125rem] align-middle">
+                  <span className={`inline-flex items-center gap-1 text-[0.8125rem] font-medium ${c.gender === 'Male' ? 'text-violet-700' : 'text-pink-600'}`}>
                     {c.gender === 'Male' ? '♂' : '♀'} {c.gender}
                   </span>
                 </td>
-                <td style={{ fontWeight: 500 }}>${c.income}K</td>
-                <td>
-                  <div className="score-bar-wrap">
+                <td className="px-4 py-[0.8125rem] text-sm font-medium text-slate-900 align-middle">
+                  ${c.income}K
+                </td>
+                <td className="px-4 py-[0.8125rem] align-middle">
+                  <div className="flex items-center gap-2">
                     <div
-                      className="score-bar"
+                      className="h-[5px] rounded-[3px] flex-shrink-0 opacity-75"
                       style={{
                         width: `${Math.min(c.spending_score, 100) * 0.7}px`,
                         background: scoreColor(c.spending_score),
-                        opacity: 0.75,
                       }}
                     />
-                    <span style={{ fontWeight: 600, minWidth: 24 }}>{c.spending_score}</span>
+                    <span className="text-sm font-semibold min-w-[24px]">{c.spending_score}</span>
                   </div>
                 </td>
-                <td>
+                <td className="px-4 py-[0.8125rem] align-middle">
                   <span className={getBadgeClass(c.persona)}>
                     {c.persona?.trim()}
                   </span>
@@ -197,11 +190,10 @@ export default function CustomerTable({ customers, stats }) {
         </table>
       </div>
 
-      {/* ── Pagination ─────────────────────── */}
       {totalPages > 1 && (
-        <div className="pagination">
-          <span className="pagination-info">
-            Halaman <strong>{page}</strong> dari <strong>{totalPages}</strong>
+        <div className="flex items-center justify-between mt-[1.125rem] pt-[1.125rem] border-t border-slate-100 flex-wrap gap-3">
+          <span className="text-[0.8125rem] text-slate-400">
+            Halaman <strong className="text-slate-600">{page}</strong> dari <strong className="text-slate-600">{totalPages}</strong>
             {' '}({filtered.length} total)
           </span>
           <PageButtons page={page} totalPages={totalPages} onPage={handlePage} />

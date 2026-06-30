@@ -1,15 +1,8 @@
-/**
- * ChartAge.jsx
- * Bar chart — distribusi umur dalam 4 kelompok usia
- * Data: customers[] dari GET /customers
- */
-
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Cell, ResponsiveContainer, LabelList,
 } from 'recharts'
 
-// Definisi kelompok usia
 const AGE_GROUPS = [
   { label: '≤ 25',  icon: '🧒', min: 0,  max: 25,  color: '#8b5cf6' },
   { label: '26–35', icon: '🧑', min: 26, max: 35,  color: '#06b6d4' },
@@ -17,7 +10,6 @@ const AGE_GROUPS = [
   { label: '> 50',  icon: '👴', min: 51, max: 999, color: '#10b981' },
 ]
 
-/* ── Custom Tooltip ─────────────────────── */
 function AgeTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
   const d = payload[0].payload
@@ -56,9 +48,13 @@ export default function ChartAge({ customers }) {
   })
 
   return (
-    <div className="glass-card chart-card">
-      <div className="chart-title">🎂 Distribusi Usia</div>
-      <div className="chart-subtitle">Persebaran usia pelanggan</div>
+    <div className="glass-card p-6">
+      <div className="text-[0.9375rem] font-bold text-slate-900 mb-0.5 tracking-tight">
+        🎂 Distribusi Usia
+      </div>
+      <div className="text-xs text-slate-400 mb-5">
+        Persebaran usia pelanggan
+      </div>
 
       <ResponsiveContainer width="100%" height={240}>
         <BarChart

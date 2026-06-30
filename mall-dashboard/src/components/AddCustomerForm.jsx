@@ -1,30 +1,35 @@
-/**
- * AddCustomerForm.jsx
- * Modal form untuk menambah pelanggan baru.
- * Backend akan otomatis memprediksi persona via K-Means.
- */
-
 import { useState } from 'react'
 import { addCustomer } from '../api/client'
 
 const INITIAL_FORM = {
-  age:           '',
-  gender:        'Male',
-  income:        '',
+  age:            '',
+  gender:         'Male',
+  income:         '',
   spending_score: '',
+}
+
+const TOAST_STYLES = {
+  success: 'bg-emerald-100 text-emerald-800 border border-emerald-300',
+  error:   'bg-rose-100 text-rose-700 border border-rose-300',
+  warning: 'bg-amber-100 text-amber-700 border border-amber-300',
+}
+
+const RESULT_CONFIG = {
+  success: { icon: '✅', label: 'Berhasil' },
+  warning: { icon: '⚠️', label: 'Duplikat' },
+  error:   { icon: '❌', label: 'Error' },
 }
 
 export default function AddCustomerForm({ onClose, onAdded }) {
   const [form, setForm]       = useState(INITIAL_FORM)
   const [loading, setLoading] = useState(false)
-  const [result, setResult]   = useState(null) // { type: 'success'|'error'|'warning', msg, persona }
+  const [result, setResult]   = useState(null)
 
   function handleChange(e) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
-    setResult(null) // reset result on change
+    setResult(null)
   }
 
-  // Tutup modal jika klik backdrop
   function handleBackdropClick(e) {
     if (e.target === e.currentTarget) onClose()
   }
@@ -36,28 +41,22 @@ export default function AddCustomerForm({ onClose, onAdded }) {
 
     try {
       const payload = {
-        age:           parseInt(form.age, 10),
-        gender:        form.gender,
-        income:        parseFloat(form.income),
+        age:            parseInt(form.age, 10),
+        gender:         form.gender,
+        income:         parseFloat(form.income),
         spending_score: parseFloat(form.spending_score),
       }
 
       const res = await addCustomer(payload)
 
       if (res.error) {
-        // 409 Conflict — pelanggan sudah ada
-        setResult({
-          type: 'warning',
-          msg: res.error,
-          persona: res.persona,
-        })
+        setResult({ type: 'warning', msg: res.error, persona: res.persona })
       } else {
         setResult({
           type: 'success',
           msg: 'Pelanggan berhasil ditambahkan!',
           persona: res.persona,
         })
-        // Tunggu sebentar agar user bisa lihat hasilnya, lalu refresh
         setTimeout(() => onAdded(), 1800)
       }
     } catch {
@@ -70,32 +69,30 @@ export default function AddCustomerForm({ onClose, onAdded }) {
     }
   }
 
-  const resultConfig = {
-    success: { icon: '✅', label: 'Berhasil' },
-    warning: { icon: '⚠️', label: 'Duplikat' },
-    error:   { icon: '❌', label: 'Error' },
-  }
-
   return (
     <div
-      className="modal-overlay"
+      className="fixed inset-0 bg-slate-900/[.45] backdrop-blur-[5px] z-[1000] flex items-center justify-center p-4 animate-fade-in"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="modal">
-        {/* ── Header ─────────────────────────── */}
-        <div className="modal-header">
+      <div
+        className="bg-white rounded-3xl p-8 w-full max-w-[490px] border border-violet-500/[.10] animate-slide-up"
+        style={{ boxShadow: '0 25px 60px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.08)' }}
+      >
+        <div className="flex items-start justify-between mb-7">
           <div>
-            <div id="modal-title" className="modal-title">➕ Tambah Pelanggan</div>
-            <div className="modal-desc">
+            <div id="modal-title" className="text-[1.1875rem] font-extrabold text-slate-900 tracking-tight">
+              ➕ Tambah Pelanggan
+            </div>
+            <div className="text-[0.8rem] text-slate-400 mt-1">
               Persona akan diprediksi otomatis melalui K-Means clustering
             </div>
           </div>
           <button
             id="modal-close-btn"
-            className="modal-close"
+            className="w-[30px] h-[30px] rounded-md border border-slate-200 bg-slate-50 cursor-pointer flex items-center justify-center text-slate-400 text-base flex-shrink-0 leading-none font-[inherit] hover:bg-slate-100 hover:text-slate-900 hover:border-slate-300 transition-all"
             onClick={onClose}
             aria-label="Tutup modal"
             type="button"
@@ -104,12 +101,12 @@ export default function AddCustomerForm({ onClose, onAdded }) {
           </button>
         </div>
 
-        {/* ── Form ───────────────────────────── */}
         <form onSubmit={handleSubmit} noValidate>
-          <div className="form-row">
-            {/* Usia */}
-            <div className="form-group">
-              <label htmlFor="input-age" className="form-label">Usia</label>
+          <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
+            <div className="mb-[1.125rem]">
+              <label htmlFor="input-age" className="block text-[0.8125rem] font-semibold text-slate-500 mb-1.5">
+                Usia
+              </label>
               <input
                 id="input-age"
                 type="number"
@@ -123,12 +120,13 @@ export default function AddCustomerForm({ onClose, onAdded }) {
                 onChange={handleChange}
                 required
               />
-              <span className="form-hint">Rentang: 1–120 tahun</span>
+              <span className="block text-[0.72rem] text-slate-400 mt-1">Rentang: 1–120 tahun</span>
             </div>
 
-            {/* Gender */}
-            <div className="form-group">
-              <label htmlFor="input-gender" className="form-label">Gender</label>
+            <div className="mb-[1.125rem]">
+              <label htmlFor="input-gender" className="block text-[0.8125rem] font-semibold text-slate-500 mb-1.5">
+                Gender
+              </label>
               <select
                 id="input-gender"
                 name="gender"
@@ -142,10 +140,11 @@ export default function AddCustomerForm({ onClose, onAdded }) {
             </div>
           </div>
 
-          <div className="form-row">
-            {/* Income */}
-            <div className="form-group">
-              <label htmlFor="input-income" className="form-label">Income ($K)</label>
+          <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
+            <div className="mb-[1.125rem]">
+              <label htmlFor="input-income" className="block text-[0.8125rem] font-semibold text-slate-500 mb-1.5">
+                Income ($K)
+              </label>
               <input
                 id="input-income"
                 type="number"
@@ -158,12 +157,13 @@ export default function AddCustomerForm({ onClose, onAdded }) {
                 onChange={handleChange}
                 required
               />
-              <span className="form-hint">Pendapatan tahunan dalam ribuan USD</span>
+              <span className="block text-[0.72rem] text-slate-400 mt-1">Pendapatan tahunan dalam ribuan USD</span>
             </div>
 
-            {/* Spending Score */}
-            <div className="form-group">
-              <label htmlFor="input-score" className="form-label">Spending Score</label>
+            <div className="mb-[1.125rem]">
+              <label htmlFor="input-score" className="block text-[0.8125rem] font-semibold text-slate-500 mb-1.5">
+                Spending Score
+              </label>
               <input
                 id="input-score"
                 type="number"
@@ -177,21 +177,18 @@ export default function AddCustomerForm({ onClose, onAdded }) {
                 onChange={handleChange}
                 required
               />
-              <span className="form-hint">Skor 1–100 (mall scoring)</span>
+              <span className="block text-[0.72rem] text-slate-400 mt-1">Skor 1–100 (mall scoring)</span>
             </div>
           </div>
 
-          {/* ── Result Toast ───────────────────── */}
+          <div className="h-px bg-slate-100 my-5" />
+
           {result && (
-            <div className={`result-toast ${result.type}`}>
-              <span style={{ fontSize: '1.1rem' }}>
-                {resultConfig[result.type].icon}
-              </span>
+            <div className={`flex items-center gap-3 px-4 py-[0.875rem] rounded-xl mt-4 text-sm font-medium animate-fade-in ${TOAST_STYLES[result.type]}`}>
+              <span className="text-[1.1rem]">{RESULT_CONFIG[result.type].icon}</span>
               <div>
-                <div style={{ fontWeight: 700, fontSize: '0.8125rem' }}>
-                  {resultConfig[result.type].label}
-                </div>
-                <div style={{ fontSize: '0.8125rem', opacity: 0.85 }}>
+                <div className="font-bold text-[0.8125rem]">{RESULT_CONFIG[result.type].label}</div>
+                <div className="text-[0.8125rem] opacity-85">
                   {result.msg}
                   {result.persona && (
                     <span> — Persona: <strong>{result.persona}</strong></span>
@@ -201,11 +198,10 @@ export default function AddCustomerForm({ onClose, onAdded }) {
             </div>
           )}
 
-          {/* ── Actions ────────────────────────── */}
-          <div className="form-actions">
+          <div className="flex gap-3 mt-6">
             <button
               type="button"
-              className="btn-secondary"
+              className="btn-secondary flex-1"
               onClick={onClose}
               disabled={loading}
             >
@@ -214,7 +210,7 @@ export default function AddCustomerForm({ onClose, onAdded }) {
             <button
               id="btn-predict-simpan"
               type="submit"
-              className="btn-primary"
+              className="btn-primary flex-[2] justify-center"
               disabled={loading || result?.type === 'success'}
             >
               {loading

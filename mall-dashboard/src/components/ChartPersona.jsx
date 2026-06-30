@@ -1,15 +1,8 @@
-/**
- * ChartPersona.jsx
- * Bar chart — jumlah pelanggan per persona (5 klaster)
- * Data: stats[] dari GET /stats
- */
-
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Cell, ResponsiveContainer, LabelList,
 } from 'recharts'
 
-// Warna per persona (harus konsisten di seluruh dashboard)
 export const PERSONA_COLORS = {
   'Pelanggan Standar':   '#8b5cf6',
   'Target Utama (VIP)':  '#f59e0b',
@@ -18,7 +11,6 @@ export const PERSONA_COLORS = {
   'Sensitif Harga':      '#f43f5e',
 }
 
-// Label pendek untuk sumbu X
 const SHORT_LABEL = {
   'Pelanggan Standar':   'Standar',
   'Target Utama (VIP)':  'VIP',
@@ -27,7 +19,6 @@ const SHORT_LABEL = {
   'Sensitif Harga':      'Sensitif',
 }
 
-/* ── Custom Tooltip ─────────────────────── */
 function PersonaTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
   const d = payload[0].payload
@@ -61,9 +52,13 @@ export default function ChartPersona({ stats }) {
   }))
 
   return (
-    <div className="glass-card chart-card">
-      <div className="chart-title">📊 Distribusi Persona</div>
-      <div className="chart-subtitle">Jumlah pelanggan per klaster K-Means</div>
+    <div className="glass-card p-6">
+      <div className="text-[0.9375rem] font-bold text-slate-900 mb-0.5 tracking-tight">
+        📊 Distribusi Persona
+      </div>
+      <div className="text-xs text-slate-400 mb-5">
+        Jumlah pelanggan per klaster K-Means
+      </div>
 
       <ResponsiveContainer width="100%" height={240}>
         <BarChart

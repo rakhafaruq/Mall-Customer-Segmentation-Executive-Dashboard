@@ -1,9 +1,3 @@
-/**
- * ChartGender.jsx
- * Donut chart — proporsi Male vs Female
- * Data: customers[] dari GET /customers
- */
-
 import {
   PieChart, Pie, Cell, Tooltip,
   Legend, ResponsiveContainer,
@@ -14,7 +8,6 @@ const COLORS = {
   Female: '#ec4899',
 }
 
-/* ── Custom Tooltip ─────────────────────── */
 function GenderTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
   const { name, value, payload: p } = payload[0]
@@ -38,9 +31,7 @@ function GenderTooltip({ active, payload }) {
   )
 }
 
-/* ── Custom Legend ──────────────────────── */
 function GenderLegend({ payload }) {
-  // Filter out ghost pie entry
   const filtered = payload.filter(e => e.value === 'Male' || e.value === 'Female')
   return (
     <div style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', marginTop: 4 }}>
@@ -71,13 +62,16 @@ export default function ChartGender({ customers }) {
   ]
 
   return (
-    <div className="glass-card chart-card">
-      <div className="chart-title">👤 Distribusi Gender</div>
-      <div className="chart-subtitle">Proporsi pria &amp; wanita</div>
+    <div className="glass-card p-6">
+      <div className="text-[0.9375rem] font-bold text-slate-900 mb-0.5 tracking-tight">
+        👤 Distribusi Gender
+      </div>
+      <div className="text-xs text-slate-400 mb-5">
+        Proporsi pria &amp; wanita
+      </div>
 
       <ResponsiveContainer width="100%" height={240}>
         <PieChart>
-          {/* Donut utama */}
           <Pie
             data={data}
             cx="50%"
@@ -96,7 +90,6 @@ export default function ChartGender({ customers }) {
           <Tooltip content={<GenderTooltip />} />
           <Legend content={<GenderLegend />} />
 
-          {/* Teks di tengah donut — pakai SVG absolut via foreignObject trick */}
           <text
             x="50%"
             y="41%"
